@@ -8,12 +8,14 @@ interface Props {
   once: boolean
   /** Do not start by itself (e.g. while reviewing feedback). */
   autoPlay: boolean
+  /** Desktop: the P key plays the audio (only set on questions with no text box). */
+  hotkey?: boolean
 }
 
 type State = 'idle' | 'played' | 'blocked'
 
 /** Big ▶ Play button. Auto-plays after the student's first tap and falls back to the button if that fails. */
-export default function AudioControl({ questionId, text, once, autoPlay }: Props) {
+export default function AudioControl({ questionId, text, once, autoPlay, hotkey }: Props) {
   const { play, audioUnlocked, voiceStatus } = useApp()
   const [state, setState] = useState<State>('idle')
   const [count, setCount] = useState(0)
@@ -36,6 +38,20 @@ export default function AudioControl({ questionId, text, once, autoPlay }: Props
   }, [questionId, autoPlay, voiceStatus])
 
   const locked = once && count > 0
+
+  useEffect(() => {
+    if (!hotkey || locked) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() !== 'p' || e.ctrlKey || e.metaKey || e.altKey || e.repeat) return
+      const t = e.target as HTMLElement | null
+      if (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) return
+      e.preventDefault()
+      void start()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hotkey, locked, text])
   const label = locked ? 'Played' : count > 0 ? 'Replay' : 'Play'
   return (
     <div className="text-center">

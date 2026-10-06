@@ -30,7 +30,8 @@ export default function Results() {
   const shareText = `I scored ${score}/${total} (${percent}%) on the Kalindri Spelling Test spelling quiz! Try it: ${window.location.origin}`
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 lg:grid lg:grid-cols-[380px_minmax(0,1fr)] lg:items-start lg:gap-8 lg:space-y-0">
+      <div className="space-y-5 lg:sticky lg:top-4">
       <section className="card text-center" aria-live="polite">
         <p className="text-5xl font-extrabold">{score}/{total}</p>
         <p className="text-2xl font-bold">{percent}%</p>
@@ -41,7 +42,7 @@ export default function Results() {
         )}
       </section>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-1">
         <button
           className="btn btn-primary"
           disabled={wrongWords.length === 0}
@@ -71,6 +72,7 @@ export default function Results() {
           ))}
         </ul>
       </section>
+      </div>
 
       <section className="space-y-3">
         <h2 className="text-lg font-bold">{wrong.length === 0 ? 'No wrong answers. Perfect!' : `Wrong answers (${wrong.length})`}</h2>

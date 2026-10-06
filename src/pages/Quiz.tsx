@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, useBlocker, useLocation, useNavigate } from 'react-router-dom'
 import { useApp } from '../context/AppContext'
 import { buildSession } from '../quiz/session'
-import { evaluate } from '../quiz/generators'
+import { evaluate, huntWordResults } from '../quiz/generators'
 import type { Answer, AnswerRecord, SessionConfig } from '../quiz/types'
 import type { TestRecord } from '../lib/progress'
 import QuestionView from '../components/QuestionView'
@@ -118,8 +118,7 @@ function QuizSession({ config }: { config: SessionConfig }) {
     if (phase !== 'ask' || finishedRef.current || !q) return
     const evaluation = evaluate(q, answer)
     if (q.input === 'hunt') {
-      const picked = new Set(Array.isArray(answer) ? answer : [])
-      for (const item of q.hunt!) if (item.wrong) recordWord(item.word, picked.has(item.text))
+      for (const r of huntWordResults(q, answer)) recordWord(r.word, r.correct)
     } else {
       recordWord(q.word, evaluation.correct)
     }
@@ -159,22 +158,21 @@ function QuizSession({ config }: { config: SessionConfig }) {
   const pct = Math.round((index / questions.length) * 100)
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-2">
-        <div className="flex items-center justify-between gap-2">
-          <p className="text-lg font-bold">
-            Question {index + 1} of {questions.length}
-          </p>
-          <div className="flex items-center gap-2">
-            {limit ? (
-              <span className={`rounded-lg px-3 py-1 font-mono text-lg font-bold ${secondsLeft <= 60 ? 'bg-red-600 text-white' : 'bg-slate-200 dark:bg-slate-700'}`} role="timer" aria-label={`Time left ${mmss(secondsLeft)}`}>
-                ⏱ {mmss(secondsLeft)}
-              </span>
-            ) : null}
-            <button type="button" className="btn btn-ghost !min-h-[44px]" onClick={() => navigate('/')}>Quit</button>
-          </div>
+    <div className="mx-auto space-y-4 md:max-w-[720px] md:space-y-5">
+      {/* Phone: label + controls, bar underneath. md+: one neat bar above the card. */}
+      <div className="grid grid-cols-[1fr_auto] items-center gap-2 md:grid-cols-[auto_1fr_auto] md:gap-5 md:rounded-2xl md:border md:border-slate-200 md:bg-white md:px-5 md:py-3 md:shadow-sm md:dark:border-slate-700 md:dark:bg-slate-800">
+        <p className="text-lg font-bold md:whitespace-nowrap">
+          Question {index + 1} of {questions.length}
+        </p>
+        <div className="flex items-center gap-2 md:col-start-3 md:row-start-1">
+          {limit ? (
+            <span className={`rounded-lg px-3 py-1 font-mono text-lg font-bold ${secondsLeft <= 60 ? 'bg-red-600 text-white' : 'bg-slate-200 dark:bg-slate-700'}`} role="timer" aria-label={`Time left ${mmss(secondsLeft)}`}>
+              ⏱ {mmss(secondsLeft)}
+            </span>
+          ) : null}
+          <button type="button" className="btn btn-ghost !min-h-[44px]" onClick={() => navigate('/')}>Quit</button>
         </div>
-        <div className="h-3 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700" role="progressbar" aria-valuemin={0} aria-valuemax={questions.length} aria-valuenow={index} aria-label="Test progress">
+        <div className="col-span-2 h-3 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700 md:col-span-1 md:col-start-2 md:row-start-1" role="progressbar" aria-valuemin={0} aria-valuemax={questions.length} aria-valuenow={index} aria-label="Test progress">
           <div className="h-full bg-brand-600 transition-all" style={{ width: `${pct}%` }} />
         </div>
       </div>

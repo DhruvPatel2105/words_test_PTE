@@ -150,6 +150,21 @@ function spellingOptions(word: string, rnd: Rng): string[] {
   return shuffle([word, ...wrong], rnd)
 }
 
+/**
+ * Words to record in progress after an Error Hunt answer.
+ *  - every misspelled word: right if tapped, wrong if missed
+ *  - every correctly spelled word the student tapped: wrong (they were not sure of its spelling)
+ */
+export function huntWordResults(q: Question, answer: Answer): { word: string; correct: boolean }[] {
+  const picked = new Set(Array.isArray(answer) ? answer : [])
+  const out: { word: string; correct: boolean }[] = []
+  for (const item of q.hunt ?? []) {
+    if (item.wrong) out.push({ word: item.word, correct: picked.has(item.text) })
+    else if (picked.has(item.text)) out.push({ word: item.word, correct: false })
+  }
+  return out
+}
+
 const huntNote = 'Tap all the misspelled words.'
 
 export function evaluate(q: Question, answer: Answer): Evaluation {

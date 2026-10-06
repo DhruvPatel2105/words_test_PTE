@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { ALTERNATES, WORDS } from '../data/words'
 import { MISSPELLINGS } from '../data/misspellings'
-import { EXTRA_WORDS, canMake, evaluate, makeQuestion, maskWord, scrambleWord } from './generators'
+import { EXTRA_WORDS, canMake, evaluate, huntWordResults, makeQuestion, maskWord, scrambleWord } from './generators'
 import { buildSession } from './session'
 import { ALL_TYPES, type QuestionType, type SessionConfig } from './types'
 import { shuffle } from '../lib/rng'
+import { recordResult, defaultStore } from '../lib/progress'
+import { CONFUSABLES } from '../data/confusables'
 
 /** A picker over a fixed list of unused words, like the session builder provides. */
 const pickerFor = (own: string) => (n: number) => shuffle(WORDS.filter((w) => w !== own)).slice(0, n)
@@ -214,5 +216,41 @@ describe('buildSession', () => {
     expect(EXTRA_WORDS.findWrong).toBe(3)
     expect(EXTRA_WORDS.errorHunt).toBe(7)
     expect(Object.keys(ALTERNATES).length).toBe(5)
+  })
+})
+
+describe('Which Word Fits? starting words', () => {
+  it('every confusable word (including portrait) is in the word list and can start a question', () => {
+    for (const g of CONFUSABLES) {
+      for (const w of Object.keys(g.sentences)) {
+        expect(WORDS).toContain(w)
+        expect(canMake('whichFits', w)).toBe(true)
+        const q = makeQuestion('whichFits', w, pickerFor(w))
+        expect(q.word).toBe(w)
+        expect(q.correct).toBe(w)
+      }
+    }
+    expect(WORDS).toContain('portrait')
+    expect(WORDS).toContain('portraits')
+  })
+})
+
+describe('Error Hunt progress', () => {
+  const q = makeQuestion('errorHunt', 'ability', pickerFor('ability'))
+  const wrong = q.hunt!.filter((h) => h.wrong)
+  const right = q.hunt!.filter((h) => !h.wrong)
+  it('a correctly spelled word tapped as wrong is recorded as a mistake', () => {
+    const res = huntWordResults(q, [...wrong.map((h) => h.text), right[0].text])
+    expect(res).toContainEqual({ word: right[0].word, correct: false })
+    let store = defaultStore()
+    for (const r of res) store = recordResult(store, r.word, r.correct)
+    expect(store.mistakes).toContain(right[0].word)
+    // the misspelled words that were tapped are recorded as right
+    for (const w of wrong) expect(res).toContainEqual({ word: w.word, correct: true })
+  })
+  it('untapped correct words are not recorded; missed misspelled words are mistakes', () => {
+    const res = huntWordResults(q, [])
+    expect(res.map((r) => r.word).sort()).toEqual(wrong.map((h) => h.word).sort())
+    expect(res.every((r) => !r.correct)).toBe(true)
   })
 })

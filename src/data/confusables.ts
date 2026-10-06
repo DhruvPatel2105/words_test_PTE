@@ -9,22 +9,22 @@ export const CONFUSABLES: ConfusableGroup[] = [
   {
     id: 'career/carrier',
     sentences: {
-      career: 'She hopes to build a successful career in international journalism.',
-      carrier: 'The airline is the main carrier of passengers between the two islands.',
+      career: 'She has built a successful career in nursing and has worked in the same hospital for thirty years.',
+      carrier: 'The airline is the largest carrier of cargo between Australia and Asia.',
     },
   },
   {
     id: 'reply/replay',
     sentences: {
-      reply: 'Please reply to this message as soon as you have checked the dates.',
-      replay: 'The coach asked the players to watch the replay of the final goal.',
+      reply: 'She promised to reply to every message before the end of the week.',
+      replay: 'The television channel will replay the final match tonight at eight o\'clock.',
     },
   },
   {
     id: 'patience/patient',
     sentences: {
       patience: 'Teaching young children to read requires a great deal of patience.',
-      patient: 'The doctor asked the patient to describe the pain in detail.',
+      patient: 'The doctor asked the patient to describe where the pain started.',
     },
   },
   {
@@ -51,7 +51,7 @@ export const CONFUSABLES: ConfusableGroup[] = [
   {
     id: 'statistic/statistics',
     sentences: {
-      statistic: 'The most shocking statistic in the report is that half the children cannot swim.',
+      statistic: 'One shocking statistic in the report is that half of the children cannot swim.',
       statistics: 'According to government statistics, the number of tourists increased last year.',
     },
   },
@@ -65,15 +65,15 @@ export const CONFUSABLES: ConfusableGroup[] = [
   {
     id: 'relevant/irrelevant',
     sentences: {
-      relevant: 'Candidates should only mention experience that is directly relevant to the job.',
-      irrelevant: 'He skipped the long list of dates because they were irrelevant to his argument.',
+      relevant: 'The tutor asked her to add a relevant example to support the main argument.',
+      irrelevant: 'The tutor asked her to remove an irrelevant example that did not support the main argument.',
     },
   },
   {
     id: 'compatible/incompatible',
     sentences: {
-      compatible: 'The two medicines are compatible, so patients can safely take them together.',
-      incompatible: 'The two medicines are incompatible, so patients must never take them together.',
+      compatible: 'The technician chose a compatible cable that fits both the old and the new computer.',
+      incompatible: 'The technician returned an incompatible cable that fits neither the old nor the new computer.',
     },
   },
   {
@@ -86,7 +86,7 @@ export const CONFUSABLES: ConfusableGroup[] = [
   {
     id: 'profession/professional/professionally',
     sentences: {
-      profession: 'Medicine is a demanding profession that requires many years of study.',
+      profession: 'Doctors have a long tradition of caring for others within the profession of medicine.',
       professional: 'He gave a professional presentation that impressed the whole committee.',
       professionally: 'The photographs were professionally printed and framed before the exhibition.',
     },
@@ -110,7 +110,7 @@ export const CONFUSABLES: ConfusableGroup[] = [
     sentences: {
       interest: 'The students showed great interest in the topic of renewable energy.',
       interested: 'She was interested in the course because it included a field trip.',
-      interesting: 'The documentary was so interesting that nobody left the room.',
+      interesting: 'It is interesting to see how quickly young children learn new words.',
     },
   },
   {
@@ -124,7 +124,7 @@ export const CONFUSABLES: ConfusableGroup[] = [
     id: 'restricted/restrictive',
     sentences: {
       restricted: 'Access to the archive was restricted by the new security rules.',
-      restrictive: 'Many teachers find the national curriculum restrictive because it leaves little room for creativity.',
+      restrictive: 'Many teachers describe the national curriculum as restrictive because it leaves little room for creativity.',
     },
   },
   {

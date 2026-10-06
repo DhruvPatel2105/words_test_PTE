@@ -46,7 +46,7 @@ export default function Custom() {
     })
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 md:mx-auto md:max-w-[720px]">
       <h1 className="text-2xl font-extrabold">Custom Practice</h1>
 
       <fieldset className="card space-y-3">

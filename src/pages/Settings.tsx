@@ -10,7 +10,7 @@ export default function Settings() {
   const selected = voices.find((v) => v.voiceURI === settings.voiceURI)?.voiceURI ?? ''
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 md:mx-auto md:max-w-[600px]">
       <h1 className="text-2xl font-extrabold">Settings</h1>
 
       <section className="card space-y-4">
